@@ -58,6 +58,8 @@ else
   pip install torch==${TORCH_VERSION}+cu${CUDA_VERSION_CODE} torchvision==${TORCHVISION_VERSION}+cu${CUDA_VERSION_CODE} -f https://download.pytorch.org/whl/torch_stable.html
 fi
 
+pip install numpy==1.19.5
+
 pip install --no-cache-dir mmcv-full==${MMCV_VERSION} -f https://download.openmmlab.com/mmcv/dist/cu${CUDA_VERSION_CODE}/torch${TORCH_VERSION}/index.html
 
 # Install other requirements.
@@ -71,6 +73,11 @@ else
 fi
 
 pip install -e .
+
+# for nncf
+pip install pandas
+pip install texttable
+
 MMDETECTION_DIR=`realpath .`
 echo "export MMDETECTION_DIR=${MMDETECTION_DIR}" >> ${venv_dir}/bin/activate
 

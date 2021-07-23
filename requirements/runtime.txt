@@ -1,6 +1,6 @@
 matplotlib
 mmcv-full==1.3.0
-mmpycocotools
+git+https://github.com/open-mmlab/cocoapi.git#subdirectory=pycocotools
 numpy
 six
 terminaltables
