@@ -53,26 +53,42 @@ class ATSSHead(AnchorHead):
         self.relu = nn.ReLU(inplace=True)
         self.cls_convs = nn.ModuleList()
         self.reg_convs = nn.ModuleList()
-        for i in range(self.stacked_convs):
-            chn = self.in_channels if i == 0 else self.feat_channels
-            self.cls_convs.append(
-                ConvModule(
-                    chn,
-                    self.feat_channels,
-                    3,
-                    stride=1,
-                    padding=1,
-                    conv_cfg=self.conv_cfg,
-                    norm_cfg=self.norm_cfg))
-            self.reg_convs.append(
-                ConvModule(
-                    chn,
-                    self.feat_channels,
-                    3,
-                    stride=1,
-                    padding=1,
-                    conv_cfg=self.conv_cfg,
-                    norm_cfg=self.norm_cfg))
+        self.all_cls_convs = {}
+        self.all_reg_convs = {}
+        self.cuda = torch.device('cuda') 
+
+        
+        for in_channel in self.in_channels:
+
+            self.cls_convs = nn.ModuleList()
+            self.reg_convs = nn.ModuleList()
+
+            for i in range(self.stacked_convs):
+                chn = in_channel if i == 0 else self.feat_channels
+                self.cls_convs.append(
+                    ConvModule(
+                        chn,
+                        self.feat_channels,
+                        3,
+                        stride=1,
+                        padding=1,
+                        conv_cfg=self.conv_cfg,
+                        norm_cfg=self.norm_cfg).to(self.cuda))
+                self.reg_convs.append(
+                    ConvModule(
+                        chn,
+                        self.feat_channels,
+                        3,
+                        stride=1,
+                        padding=1,
+                        conv_cfg=self.conv_cfg,
+                        norm_cfg=self.norm_cfg).to(self.cuda))
+
+            self.all_cls_convs[in_channel] = self.cls_convs
+            self.all_reg_convs[in_channel] = self.reg_convs
+
+        print(self.all_cls_convs)
+
         self.atss_cls = nn.Conv2d(
             self.feat_channels,
             self.num_anchors * self.cls_out_channels,
@@ -87,10 +103,14 @@ class ATSSHead(AnchorHead):
 
     def init_weights(self):
         """Initialize weights of the head."""
-        for m in self.cls_convs:
-            normal_init(m.conv, std=0.01)
-        for m in self.reg_convs:
-            normal_init(m.conv, std=0.01)
+        for key in self.all_cls_convs.keys(): 
+
+            for m in self.all_cls_convs[key]:
+                normal_init(m.conv, std=0.01)
+
+            for m in self.all_reg_convs[key]:
+                normal_init(m.conv, std=0.01)
+
         bias_cls = bias_init_with_prob(0.01)
         normal_init(self.atss_cls, std=0.01, bias=bias_cls)
         normal_init(self.atss_reg, std=0.01)
@@ -133,10 +153,13 @@ class ATSSHead(AnchorHead):
         """
         cls_feat = x
         reg_feat = x
-        for cls_conv in self.cls_convs:
+
+        for cls_conv in self.all_cls_convs[x.shape[1]]:
             cls_feat = cls_conv(cls_feat)
-        for reg_conv in self.reg_convs:
+
+        for reg_conv in self.all_reg_convs[x.shape[1]]:
             reg_feat = reg_conv(reg_feat)
+
         cls_score = self.atss_cls(cls_feat)
         # we just follow atss, not apply exp in bbox_pred
         bbox_pred = scale(self.atss_reg(reg_feat)).float()
