@@ -14,7 +14,8 @@ import warnings
 
 import mmcv
 import torch
-from mmcv import Config, DictAction
+from mmcv import Config
+from  mmcv.utils.config import DictAction
 from mmcv.runner import get_dist_info, init_dist
 from mmcv.utils import get_git_hash
 
