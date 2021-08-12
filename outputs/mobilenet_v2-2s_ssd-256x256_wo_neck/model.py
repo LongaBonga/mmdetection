@@ -95,8 +95,8 @@ data = dict(
         dataset=dict(
             type='CocoDataset',
             ann_file=
-            '/home/dobryaev/datasets/coco/annotations/instances_train2017.json',
-            img_prefix='/home/dobryaev/datasets/coco/images/train2017',
+            './data/coco/annotations/instances_train2017.json',
+            img_prefix='./data/coco/images/train2017',
             pipeline=[
                 dict(type='LoadImageFromFile', to_float32=True),
                 dict(type='LoadAnnotations', with_bbox=True),
@@ -123,8 +123,8 @@ data = dict(
     val=dict(
         type='CocoDataset',
         ann_file=
-        '/home/dobryaev/datasets/coco/annotations/instances_val2017.json',
-        img_prefix='/home/dobryaev/datasets/coco/images/val2017',
+        './data/coco/annotations/instances_val2017.json',
+        img_prefix='./data/coco/images/val2017',
         test_mode=True,
         pipeline=[
             dict(type='LoadImageFromFile'),
@@ -146,8 +146,8 @@ data = dict(
     test=dict(
         type='CocoDataset',
         ann_file=
-        '/home/dobryaev/datasets/coco/annotations/instances_val2017.json',
-        img_prefix='/home/dobryaev/datasets/coco/images/test2017',
+        './data/coco/annotations/instances_val2017.json',
+        img_prefix='./data/coco/images/test2017',
         test_mode=True,
         pipeline=[
             dict(type='LoadImageFromFile'),
