@@ -87,21 +87,21 @@ data = dict(
         times=5,
         dataset=dict(
             type=dataset_type,
-            ann_file='/home/dobryaev/datasets/coco/annotations/instances_train2017.json',
-            img_prefix='/home/dobryaev/datasets/coco/images/train2017',
+            ann_file='./data/coco/annotations/instances_train2017.json',
+            img_prefix='./data/coco/images/train2017',
             pipeline=train_pipeline
         )
     ),
     val=dict(
         type=dataset_type,
-        ann_file='/home/dobryaev/datasets/coco/annotations/instances_val2017.json',
-        img_prefix='/home/dobryaev/datasets/coco/images/val2017',
+        ann_file='./data/coco/annotations/instances_val2017.json',
+        img_prefix='./data/coco/images/val2017',
         test_mode=True,
         pipeline=test_pipeline),
     test=dict(
         type=dataset_type,
-        ann_file='/home/dobryaev/datasets/coco/annotations/instances_val2017.json',
-        img_prefix='/home/dobryaev/datasets/coco/images/test2017',
+        ann_file='./data/coco/annotations/instances_val2017.json',
+        img_prefix='./data/coco/images/test2017',
         test_mode=True,
         pipeline=test_pipeline))
 # optimizer
