@@ -73,6 +73,7 @@ class AnchorFreeHead(BaseDenseHead, BBoxTestMixin):
         self.conv_cfg = conv_cfg
         self.norm_cfg = norm_cfg
         self.fp16_enabled = False
+        self.cuda = torch.device('cuda')
 
         self._init_layers()
 
@@ -207,8 +208,17 @@ class AnchorFreeHead(BaseDenseHead, BBoxTestMixin):
                 after classification and regression conv layers, some
                 models needs these features like FCOS.
         """
+        input_preproc = ConvModule(
+                    x.shape[1],
+                    self.in_channels,
+                    1,
+                    stride=1,
+                    ).to(self.cuda)
+        x = input_preproc(x)
         cls_feat = x
         reg_feat = x
+
+
 
         for cls_layer in self.cls_convs:
             cls_feat = cls_layer(cls_feat)

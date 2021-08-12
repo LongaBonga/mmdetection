@@ -441,7 +441,9 @@ class FCOSHead(AnchorFreeHead):
                 concat_lvl_bbox_targets (list[Tensor]): BBox targets of each \
                     level.
         """
-        assert len(points) == len(self.regress_ranges)
+        # print('Len Points :', len(points))
+        # print('Len regress_ranges :', len(self.regress_ranges))
+        # assert len(points) == len(self.regress_ranges)
         num_levels = len(points)
         # expand regress ranges to align with points
         expanded_regress_ranges = [
